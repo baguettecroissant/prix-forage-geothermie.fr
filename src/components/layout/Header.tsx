@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { IconDrill, IconBook, IconAward, IconMapPin, IconMenu2, IconX } from "@tabler/icons-react";
+import { IconBackhoe, IconBook, IconAward, IconMapPin, IconMenu2, IconX } from "@tabler/icons-react";
 
 export function Header() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -18,7 +18,7 @@ export function Header() {
             <div className="max-w-7xl mx-auto flex h-16 md:h-20 items-center justify-between px-4 sm:px-6 lg:px-8">
                 {/* Logo */}
                 <Link href="/" className="flex items-center gap-2 group">
-                    <IconDrill className="h-7 w-7 text-accent group-hover:text-secondary transition-colors" />
+                    <IconBackhoe className="h-7 w-7 text-accent group-hover:text-secondary transition-colors" />
                     <span className="text-xl md:text-2xl font-bold text-primary tracking-tight font-heading">
                         Prix<span className="text-secondary">Forage</span>
                     </span>
@@ -41,7 +41,7 @@ export function Header() {
                 {/* Desktop CTA + Mobile Menu Button */}
                 <div className="flex items-center gap-4">
                     <Link href="/devis" className="hidden sm:inline-flex items-center bg-accent hover:bg-blue-700 text-white text-sm md:text-base px-5 md:px-8 py-2.5 md:py-3 shadow-md hover:shadow-lg transition-all rounded-lg font-medium">
-                        <IconDrill className="mr-2 h-4 w-4 md:h-5 md:w-5" />
+                        <IconBackhoe className="mr-2 h-4 w-4 md:h-5 md:w-5" />
                         Devis Gratuit
                     </Link>
 
@@ -73,7 +73,7 @@ export function Header() {
                         ))}
                         <div className="pt-4 border-t border-slate-100">
                             <Link href="/devis" onClick={() => setMobileMenuOpen(false)} className="flex items-center justify-center gap-2 w-full bg-accent hover:bg-blue-700 text-white h-12 rounded-lg font-medium transition-colors">
-                                <IconDrill className="h-5 w-5" />
+                                <IconBackhoe className="h-5 w-5" />
                                 Devis Gratuit
                             </Link>
                         </div>

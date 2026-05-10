@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { IconDrill } from "@tabler/icons-react";
+import { IconBackhoe } from "@tabler/icons-react";
 
 const POPULAR_GUIDES = [
     { slug: "prix-geothermie-2026", title: "Prix Géothermie 2026" },
@@ -43,7 +43,7 @@ export function Footer() {
                     {/* Brand & Description */}
                     <div>
                         <h3 className="text-2xl font-bold text-white mb-4 flex items-center gap-2 font-heading">
-                            <IconDrill className="h-6 w-6 text-accent" />
+                            <IconBackhoe className="h-6 w-6 text-accent" />
                             Prix<span className="text-secondary">Forage</span>
                         </h3>
                         <p className="text-slate-300 text-sm leading-relaxed max-w-sm">
