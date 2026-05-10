@@ -135,18 +135,18 @@ function buildPricingContext(city: City, pop: number, climateLabel: string): str
     const region = city.region;
     
     if (pop > 200000) {
-        return `En tant que métropole, ${city.name} présente des tarifs d'installation géothermique parmi les plus élevés du ${dept}. Les contraintes logistiques (accès chantier, autorisations de voirie, voisinage) génèrent un surcoût de 15 à 25% par rapport à la moyenne nationale. Cependant, la densité d'installateurs certifiés en ${region} permet de négocier et d'obtenir des devis compétitifs. Le captage vertical est quasi-systématique en raison de la taille réduite des terrains. Les aides financières (MaPrimeRénov' + CEE) compensent efficacement ce surcoût : le reste à charge après aides reste dans la moyenne nationale.`;
+        return `Le prix du forage géothermique à ${city.name} est le plus élevé du ${dept} : 75 à 110€ par mètre linéaire de sonde, soit un budget forage seul de 12 000 à 22 000€ pour un pavillon de 120 m². Ce surcoût de 15 à 30% s'explique par la logistique métropolitaine (foreuse compacte, autorisation de voirie, gestion des boues réglementée). Le budget total tout compris (forage + PAC + raccordements) atteint 25 000 à 38 000€. L'aquathermie sur nappe, quand elle est disponible en ${region}, réduit le poste forage de 30 à 50%.`;
     }
     if (pop > 50000) {
-        return `À ${city.name}, les tarifs d'installation géothermique sont légèrement supérieurs à la moyenne du ${dept}, avec un surcoût de 5 à 15% lié aux contraintes urbaines. En ${region}, zone ${climateLabel.toLowerCase()}, le réseau d'installateurs RGE est suffisamment dense pour maintenir une concurrence saine. Le choix entre captage vertical et horizontal dépend de votre terrain — les deux solutions sont régulièrement mises en œuvre. Profitez de la présence de plusieurs professionnels pour comparer les offres et les technologies proposées (PAC sol-eau, eau-eau, avec ou sans géocooling).`;
+        return `À ${city.name}, le tarif de forage géothermique est de 60 à 85€/ml, avec un surcoût urbain de 5 à 15%. Le budget forage pour 2 sondes de 100 m s'établit à 12 000 à 17 000€. Le budget total (forage + PAC 12 kW + raccordements) est de 20 000 à 30 000€. En ${region}, zone ${climateLabel.toLowerCase()}, la présence de 5 à 10 foreurs dans le ${dept} permet de mettre en concurrence les devis et de négocier le prix au mètre.`;
     }
     if (pop > 10000) {
-        return `${city.name} bénéficie de tarifs proches de la moyenne nationale pour l'installation géothermique. En ${region}, ${climateLabel.toLowerCase()}, les installateurs du ${dept} proposent des prix compétitifs grâce à des conditions de chantier favorables (accès terrain, espace disponible). Le rapport qualité-prix est optimal dans les villes de cette taille : vous bénéficiez de l'expertise des professionnels tout en évitant les surcoûts métropolitains.`;
+        return `Le prix du forage à ${city.name} est conforme à la moyenne du ${dept} : 55 à 75€/ml. Pour un pavillon de 120 m², le budget forage (2 sondes de 80-100 m) se situe entre 9 000 et 15 000€. Le budget total tout compris est de 18 000 à 28 000€. En ${region}, les foreurs proposent des tarifs compétitifs grâce à des conditions de chantier favorables (accès terrain, espace de manœuvre).`;
     }
     if (pop > 2000) {
-        return `Dans les communes comme ${city.name}, les prix sont souvent plus avantageux que dans les grandes villes du ${dept}. Les installateurs locaux en ${region} proposent des tarifs 5 à 15% inférieurs à la moyenne nationale, avec l'avantage d'un suivi de proximité. Le captage horizontal, possible sur les terrains spacieux de cette commune, permet de réduire encore le budget de 3 000 à 5 000€ par rapport au forage vertical.`;
+        return `À ${city.name}, les tarifs de forage sont 5 à 15% inférieurs à la moyenne du ${dept} : 50 à 70€/ml. Le captage horizontal, réalisable sur les terrains spacieux de cette commune, abaisse le poste captage à 4 000 à 7 000€ au lieu de 9 000 à 14 000€ pour le forage vertical. Le budget total est de 14 000 à 22 000€ en captage horizontal et 18 000 à 26 000€ en forage vertical.`;
     }
-    return `En commune rurale comme ${city.name}, vous bénéficiez des tarifs les plus compétitifs du ${dept} pour la géothermie. Les foreurs locaux en ${region} proposent des prix attractifs, et la disponibilité foncière permet d'opter pour le captage horizontal — la solution la plus économique. Le principal poste de coût à anticiper est le déplacement du foreur si aucun professionnel n'est basé à proximité immédiate (surcoût de 500 à 1 000€).`;
+    return `En commune rurale comme ${city.name}, le prix du forage est le plus compétitif du ${dept} : 45 à 65€/ml grâce à l'absence de contraintes logistiques. Le captage horizontal (3 500 à 6 500€) est la solution la plus économique si votre terrain le permet. Le budget total est de 12 000 à 20 000€ en horizontal et 16 000 à 24 000€ en forage vertical. Seul surcoût à prévoir en ${region} : le déplacement de la foreuse si le foreur est éloigné (500 à 1 200€).`;
 }
 
 function buildFaq(city: City, pop: number, saisonTravaux: string): FaqItem[] {
@@ -155,46 +155,46 @@ function buildFaq(city: City, pop: number, saisonTravaux: string): FaqItem[] {
 
     return [
         {
-            question: `Combien coûte une installation géothermique à ${city.name} ?`,
+            question: `Quel est le prix du forage géothermique au mètre à ${city.name} ?`,
             answer: pop > 200000
-                ? `À ${city.name}, le prix moyen d'une installation géothermique complète (forage + PAC + raccordements) se situe entre 18 000€ et 35 000€. Les tarifs sont 15 à 25% supérieurs à la moyenne nationale en raison des contraintes logistiques métropolitaines. Après déduction des aides (MaPrimeRénov' + CEE), le reste à charge descend entre 8 000€ et 20 000€.`
+                ? `À ${city.name}, le prix au mètre linéaire de forage géothermique se situe entre 75 et 110€/ml. Ce tarif inclut le forage, la pose de la sonde PE-HD, la cimentation thermo-ciment et la gestion des boues. Le surcoût métropolitain (foreuse compacte, voirie, bruit) représente 3 000 à 5 000€ supplémentaires par rapport à un forage en zone rurale du ${dept}.`
                 : pop > 50000
-                    ? `À ${city.name}, le prix moyen d'une installation géothermique complète se situe entre 15 000€ et 30 000€. Les tarifs sont proches de la moyenne nationale. Après déduction des aides financières (MaPrimeRénov' jusqu'à 11 000€ + CEE jusqu'à 4 000€), le reste à charge est de 6 000€ à 18 000€.`
+                    ? `À ${city.name}, le tarif du forage géothermique est de 60 à 85€/ml selon la géologie du sous-sol. Pour 2 sondes de 100 m (standard pour un pavillon de 120 m²), comptez 12 000 à 17 000€ de forage. Les foreurs du ${dept} proposent des devis au forfait incluant forage, cimentation et test de pression.`
                     : pop > 10000
-                        ? `À ${city.name}, le prix moyen d'une installation géothermique se situe entre 14 000€ et 28 000€, conforme à la moyenne nationale. Les installateurs locaux et les réseaux de marques proposent des tarifs compétitifs. Avec les aides, le reste à charge peut descendre sous 10 000€.`
-                        : `À ${city.name}, le prix moyen d'une installation géothermique se situe entre 13 000€ et 25 000€. Les tarifs sont légèrement inférieurs à la moyenne nationale. Le captage horizontal, possible si vous disposez de terrain, réduit le coût de 3 000 à 5 000€ par rapport au forage vertical.`
+                        ? `À ${city.name}, le prix du forage est de 55 à 75€/ml, conforme à la moyenne du ${dept}. Un forage vertical de 2×80 m revient à 9 000 à 12 000€. Comparez les devis de 3 foreurs QualiForage pour obtenir le meilleur tarif au mètre.`
+                        : `À ${city.name}, le forage géothermique coûte 45 à 70€/ml — un tarif parmi les plus compétitifs du ${dept}. Le captage horizontal, possible sur les terrains spacieux, ne coûte que 4 000 à 7 000€ de terrassement. Le budget global est de 30 à 40% inférieur aux grandes villes.`
         },
         {
-            question: `Quel type de captage géothermique choisir à ${city.name} ?`,
+            question: `Captage horizontal ou forage vertical : quel coût à ${city.name} ?`,
             answer: pop > 50000
-                ? `À ${city.name}, le captage vertical par sondes géothermiques (80-150 m de profondeur) est le plus courant car il ne nécessite que peu d'espace. Si votre terrain le permet et que le sous-sol est favorable dans le ${dept}, le captage horizontal (nappe de collecteurs à 1,2 m de profondeur) est 30 à 40% moins cher. L'aquathermie (sur nappe phréatique) est aussi envisageable selon la ressource en eau locale.`
-                : `À ${city.name}, le choix entre captage vertical et horizontal dépend de votre terrain. Le captage horizontal nécessite une surface libre de 1,5 à 2 fois la surface habitable. Le captage vertical (sondes de 80-150 m) s'adapte à tous les terrains mais coûte 3 000 à 5 000€ de plus. Un foreur qualifié dans le ${dept} vous conseillera après étude du sol.`
+                ? `À ${city.name}, le forage vertical (2 sondes de 80-150 m) coûte 10 000 à 17 000€. Le captage horizontal n'est possible que si vous disposez d'une surface libre de 200 à 400 m². Quand il est faisable, il réduit le poste captage de 40 à 60% (4 000 à 8 000€). L'aquathermie sur nappe (si disponible dans le ${dept}) coûte 3 000 à 7 000€ — la solution la moins chère.`
+                : `À ${city.name}, le captage horizontal (4 000-7 000€) est 40 à 60% moins cher que le forage vertical (8 000-14 000€). Il nécessite un terrain libre de 1,5 à 2 fois la surface habitable. Un foreur qualifié du ${dept} évalue la faisabilité des deux options et vous recommande la solution au meilleur rapport coût/performance.`
         },
         {
-            question: `La géothermie est-elle rentable à ${city.name} ?`,
-            answer: `Oui, la géothermie est le système de chauffage le plus rentable à long terme à ${city.name}. ${saisonTravaux} En remplacement du fioul, l'économie annuelle atteint 1 500 à 2 000€/an. En remplacement du gaz, 800 à 1 200€/an. L'amortissement est de 8 à 12 ans, et la durée de vie du système dépasse 25 ans (50 ans pour les sondes).`
+            question: `Comment se décompose le budget d'un forage géothermique à ${city.name} ?`,
+            answer: `Le budget se répartit ainsi à ${city.name} : forage et captage (35-45% du total, soit 6 000 à 16 000€), PAC géothermique (40-50%, soit 7 000 à 18 000€ selon la marque), raccordements hydrauliques et électriques (10-15%, soit 2 000 à 4 000€), et mise en service (2-3%, soit 500 à 800€). ${saisonTravaux} Les foreurs du ${dept} incluent généralement l'étude de sol dans le devis de forage.`
         },
         {
-            question: `Quelles aides pour la géothermie à ${city.name} en 2026 ?`,
-            answer: `Les aides financières pour la géothermie à ${city.name} (${dept}) sont les plus généreuses du secteur de la rénovation énergétique : MaPrimeRénov' (jusqu'à 11 000€ pour les ménages très modestes), Certificats d'Économies d'Énergie – CEE (jusqu'à 4 000€), TVA réduite à 5,5%, éco-PTZ (jusqu'à 50 000€ à taux zéro), et éventuellement des aides locales du département ${dept} ou de la région ${region}. Au total, jusqu'à 15 000€ d'aides cumulables.`
+            question: `Quel est le prix d'une PAC géothermique à ${city.name} ?`,
+            answer: `Le prix de la PAC géothermique seule (hors forage et raccordements) à ${city.name} varie de 7 000 à 18 000€ selon la marque et la puissance. Une PAC sol-eau de 8 kW (maison 100 m² bien isolée) coûte 7 000 à 10 000€. Une PAC de 14 kW (maison 150 m² ou ancienne) coûte 12 000 à 18 000€. Les marques les plus posées dans le ${dept} en ${region} : Viessmann, NIBE, Vaillant, Atlantic et Daikin.`
         },
         {
-            question: `Faut-il une autorisation pour un forage géothermique à ${city.name} ?`,
-            answer: `Oui, tout forage géothermique à ${city.name} nécessite une déclaration préalable auprès de la DREAL (formulaire en ligne sur le site du BRGM). Pour les forages de moins de 10 m, une simple déclaration suffit. Pour les forages de plus de 10 m (sondes verticales), un dossier plus complet est requis avec un délai de traitement de 1 à 2 mois dans le ${dept}. Votre installateur RGE se charge généralement des formalités.`
+            question: `Le forage géothermique nécessite-t-il une autorisation à ${city.name} ?`,
+            answer: `Oui, tout forage supérieur à 10 m à ${city.name} nécessite une déclaration préalable auprès de la DREAL du ${dept} (formulaire en ligne, délai de traitement 1-2 mois). Le foreur certifié QualiForage se charge généralement de cette formalité. En zone urbaine, une autorisation de voirie complémentaire est nécessaire (150-300€, délai 15-30 jours). Le coût administratif total est de 0€ (DREAL gratuit) à 300€ (voirie urbaine).`
         },
         {
-            question: `Combien de temps durent les travaux de géothermie à ${city.name} ?`,
+            question: `Combien coûte l'entretien annuel d'un forage géothermique à ${city.name} ?`,
             answer: pop > 50000
-                ? `À ${city.name}, comptez 4 à 7 jours ouvrés pour l'ensemble du chantier (forage + installation PAC + raccordements). Le forage vertical dure 1 à 2 jours, la pose de la PAC et les raccordements hydrauliques/électriques 2 à 3 jours. En zone urbaine, les autorisations administratives peuvent ajouter 1 à 2 mois de délai. Planifiez votre projet 3 à 4 mois avant la saison de chauffe.`
-                : `À ${city.name}, comptez 3 à 5 jours ouvrés pour l'installation complète. Le forage vertical dure 1 à 2 jours, le captage horizontal 2 à 3 jours. La mise en service est immédiate après le raccordement. Prévoyez 2 à 3 mois entre le premier devis et le début des travaux.`
+                ? `L'entretien annuel d'une PAC géothermique à ${city.name} coûte 200 à 400€/an en contrat de maintenance (visite annuelle + dépannage prioritaire). Sans contrat : 150 à 250€ par visite d'entretien + dépannage au tarif horaire (80-120€/h dans le ${dept}). Les sondes géothermiques ne nécessitent aucun entretien — elles durent 50 ans. Le coût total de possession sur 25 ans : 5 000 à 10 000€ d'entretien.`
+                : `L'entretien annuel d'une PAC géothermique à ${city.name} coûte 150 à 300€/an en contrat de maintenance. Un contrat 3 ou 5 ans est souvent plus avantageux (réduction de 10-20%). Les sondes géothermiques du ${dept} ne nécessitent aucun entretien. Sur 25 ans, le coût total d'entretien est de 3 750 à 7 500€ — bien moins qu'une chaudière gaz ou fioul.`
         },
         {
-            question: `Quelle est la durée de vie d'une installation géothermique à ${city.name} ?`,
-            answer: `Une installation géothermique à ${city.name} a une durée de vie exceptionnelle. La pompe à chaleur (PAC) fonctionne 25 à 30 ans avec un entretien annuel (150 à 300€/an). Les sondes géothermiques enterrées dans le sous-sol du ${dept} durent 50 ans et plus — elles survivent à la PAC et peuvent être réutilisées lors d'un remplacement. C'est un investissement patrimonial qui se transmet avec la maison.`
+            question: `Combien de temps pour amortir un forage géothermique à ${city.name} ?`,
+            answer: `Le temps de retour sur investissement d'un forage géothermique à ${city.name} dépend de votre chauffage actuel : remplacement fioul = amortissement en 6 à 9 ans (économie de 1 500-2 200€/an), remplacement gaz = 8 à 12 ans (économie de 800-1 400€/an), remplacement électrique = 7 à 10 ans (économie de 1 200-1 800€/an). Après amortissement, la PAC génère un gain net de 15 000 à 30 000€ sur sa durée de vie restante.`
         },
         {
-            question: `La géothermie fonctionne-t-elle aussi pour le rafraîchissement à ${city.name} ?`,
-            answer: `Oui, la géothermie offre le "géocooling" : en été, la température du sous-sol à ${city.name} (12-14°C) est naturellement inférieure à la température extérieure. La PAC géothermique réversible peut rafraîchir votre logement à moindre coût — bien moins cher qu'une climatisation classique. En ${region}, cette double fonction chauffage/rafraîchissement accélère le retour sur investissement de votre installation.`
+            question: `Quels sont les surcoûts cachés d'un forage géothermique à ${city.name} ?`,
+            answer: `Les surcoûts potentiels à ${city.name} : aléa géologique (couche de roche dure imprévue = +10-30€/ml sur le forage), déplacement de la foreuse si le foreur est distant (500-1 500€), gestion des boues en filière agréée (500-2 000€ selon le volume), remise en état du terrain après chantier (300-1 000€), et raccordement électrique triphasé si nécessaire (500-1 500€). Un devis forfaitaire du foreur dans le ${dept} couvre la majorité de ces risques.`
         },
     ];
 }
