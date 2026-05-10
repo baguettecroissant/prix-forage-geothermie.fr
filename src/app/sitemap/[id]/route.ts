@@ -6,7 +6,7 @@ import { notFound } from 'next/navigation';
 
 export const dynamic = 'force-static';
 
-const BASE_URL = 'https://www.cout-geothermie.fr';
+const BASE_URL = 'https://www.prix-forage-geothermie.fr';
 const allCities = citiesData as City[];
 
 function getAllDepartmentCodes(): string[] {
