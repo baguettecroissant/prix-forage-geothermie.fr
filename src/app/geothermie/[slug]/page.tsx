@@ -43,10 +43,10 @@ export async function generateMetadata({
   const prixMax = deptInfo?.prix_max || 30000;
 
   return {
-    title: `Prix Géothermie à ${city.name} (${city.zip}) — Forage et PAC dès ${prixMin.toLocaleString("fr-FR")}€ | cout-geothermie.fr`,
-    description: `Combien coûte une installation géothermique à ${city.name} (${city.zip}) ? De ${prixMin.toLocaleString("fr-FR")}€ à ${prixMax.toLocaleString("fr-FR")}€ TTC. Devis gratuit d'installateurs RGE dans le ${city.department_name}.`,
+    title: `Prix Forage Géothermique à ${city.name} (${city.zip}) — De ${Math.round(prixMin*0.35).toLocaleString("fr-FR")}€ à ${Math.round(prixMax*0.4).toLocaleString("fr-FR")}€ le forage | prix-forage-geothermie.fr`,
+    description: `Quel est le prix du forage géothermique à ${city.name} (${city.zip}) ? De 40 à 120€ le mètre linéaire. Comparez les foreurs certifiés QualiForage dans le ${city.department_name}.`,
     alternates: {
-      canonical: `https://www.cout-geothermie.fr/geothermie/${slug}`,
+      canonical: `https://www.prix-forage-geothermie.fr/geothermie/${slug}`,
     },
   };
 }
@@ -80,9 +80,9 @@ export default async function CityPage({
       {
         "@type": "BreadcrumbList",
         itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Accueil", item: "https://www.cout-geothermie.fr" },
-          { "@type": "ListItem", position: 2, name: "Annuaire", item: "https://www.cout-geothermie.fr/annuaire" },
-          { "@type": "ListItem", position: 3, name: `Géothermie ${city.name}`, item: `https://www.cout-geothermie.fr/geothermie/${slug}` },
+          { "@type": "ListItem", position: 1, name: "Accueil", item: "https://www.prix-forage-geothermie.fr" },
+          { "@type": "ListItem", position: 2, name: "Annuaire", item: "https://www.prix-forage-geothermie.fr/annuaire" },
+          { "@type": "ListItem", position: 3, name: `Géothermie ${city.name}`, item: `https://www.prix-forage-geothermie.fr/geothermie/${slug}` },
         ],
       },
       {
@@ -90,7 +90,7 @@ export default async function CityPage({
         name: `Installation géothermique à ${city.name}`,
         serviceType: "Installation PAC géothermique",
         areaServed: { "@type": "City", name: city.name, postalCode: city.zip },
-        provider: { "@id": "https://www.cout-geothermie.fr/#organization" },
+        provider: { "@id": "https://www.prix-forage-geothermie.fr/#organization" },
         offers: {
           "@type": "AggregateOffer",
           lowPrice: prixMin,
@@ -131,16 +131,16 @@ export default async function CityPage({
       <section className="bg-gradient-to-br from-stone-900 via-stone-800 to-stone-900 text-white py-16">
         <div className="max-w-5xl mx-auto px-4 text-center">
           <h1 className="text-3xl md:text-5xl font-extrabold mb-4 font-heading leading-tight">
-            Géothermie à{" "}
+            Prix Forage Géothermique à{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-amber-400">{city.name}</span>
           </h1>
           <p className="text-xl text-stone-300">
-            Prix, forage et installateurs RGE — {city.department_name} ({city.department_code})
+            Tarifs au mètre, profondeur et foreurs certifiés — {city.department_name} ({city.department_code})
           </p>
           <div className="mt-8">
             <Link href="#devis" className="inline-flex items-center bg-accent hover:bg-orange-700 text-white px-8 py-3 rounded-xl font-bold shadow-lg transition-all hover:scale-105">
               <IconFlame className="mr-2 h-5 w-5" />
-              Devis gratuit à {city.name}
+              Devis forage à {city.name}
               <IconArrowRight className="ml-2 h-5 w-5" />
             </Link>
           </div>
@@ -347,7 +347,7 @@ export default async function CityPage({
           <div className="bg-stone-50 p-6 md:p-8 rounded-2xl border border-stone-100">
             <div className="max-w-2xl mx-auto text-center mb-8">
               <h2 className="text-2xl md:text-3xl font-bold text-primary mb-4 font-heading">
-                Comparez les installateurs géothermie à {city.name}
+                Comparez les foreurs géothermiques à {city.name}
               </h2>
               <p className="text-stone-600 font-medium">
                 Obtenez jusqu&apos;à 3 devis gratuits d&apos;installateurs RGE à {city.name} ({city.zip}).
@@ -477,13 +477,13 @@ export default async function CityPage({
         {/* 16. CTA Final */}
         <section className="bg-gradient-to-br from-stone-900 via-stone-800 to-stone-900 text-white p-8 md:p-12 rounded-2xl text-center">
           <h2 className="text-2xl md:text-3xl font-bold mb-4 font-heading">
-            Votre projet géothermie à {city.name} commence ici
+            Estimez le coût de votre forage à {city.name}
           </h2>
           <p className="text-stone-300 mb-6 max-w-xl mx-auto">
-            Obtenez votre devis gratuit en 2 minutes. Comparez les installateurs RGE à {city.name} ({city.zip}).
+            Comparez les foreurs certifiés et obtenez un prix au mètre garanti à {city.name} ({city.zip}).
           </p>
           <Link href="#devis" className="inline-flex items-center bg-accent hover:bg-orange-700 text-white px-8 py-3 rounded-xl font-bold shadow-lg transition-all hover:scale-105">
-            Devis Gratuit
+            Devis Forage Gratuit
             <IconArrowRight className="ml-2 h-5 w-5" />
           </Link>
         </section>
@@ -493,7 +493,7 @@ export default async function CityPage({
       <div className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-white border-t border-stone-200 p-3 shadow-lg">
         <Link href="#devis" className="flex items-center justify-center gap-2 w-full bg-accent hover:bg-orange-700 text-white py-3 rounded-lg font-bold transition-colors">
           <IconFlame className="h-5 w-5" />
-          Devis Géothermie à {city.name}
+          Devis Forage à {city.name}
         </Link>
       </div>
     </div>

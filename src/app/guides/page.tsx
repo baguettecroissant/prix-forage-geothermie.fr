@@ -4,10 +4,10 @@ import Image from "next/image";
 import { IconArrowRight } from "@tabler/icons-react";
 
 export const metadata = {
-  title: "Guides Géothermie — Prix, Forage, Aides et Conseils 2026",
+  title: "Guides Forage Géothermique — Prix, Forage, Aides et Conseils 2026",
   description: "Tous nos guides pour réussir votre projet géothermique : prix, forage, captage, aides financières, entretien PAC et choix du type d'installation.",
   alternates: {
-    canonical: "https://www.cout-geothermie.fr/guides",
+    canonical: "https://www.prix-forage-geothermie.fr/guides",
   },
 };
 
@@ -18,7 +18,7 @@ export default function GuidesIndex() {
     <div className="bg-bg min-h-screen py-20 px-4">
       <div className="max-w-7xl mx-auto">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h1 className="text-4xl font-heading font-bold text-primary mb-4">Guides Géothermie</h1>
+          <h1 className="text-4xl font-heading font-bold text-primary mb-4">Guides Forage Géothermique</h1>
           <p className="text-stone-600 text-lg">
             Nos dossiers complets pour réussir votre projet géothermique : du choix du captage au budget prévisionnel.
           </p>

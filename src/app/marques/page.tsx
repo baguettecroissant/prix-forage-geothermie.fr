@@ -6,7 +6,7 @@ export const metadata = {
   title: "Marques de PAC Géothermiques — Comparatif 2026",
   description: "Comparatif des meilleures marques de pompes à chaleur géothermiques : Viessmann, NIBE, Vaillant, Atlantic, Stiebel Eltron et Daikin.",
   alternates: {
-    canonical: "https://www.cout-geothermie.fr/marques",
+    canonical: "https://www.prix-forage-geothermie.fr/marques",
   },
 };
 

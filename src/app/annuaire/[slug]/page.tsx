@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: `Installateurs Géothermie à ${city.name} (${city.zip})`,
     description: `L'annuaire pour trouver le meilleur installateur géothermique à ${city.name} (${city.zip}). Consultez les professionnels RGE et demandez un devis.`,
     alternates: {
-      canonical: `https://www.cout-geothermie.fr/annuaire/${slug}`,
+      canonical: `https://www.prix-forage-geothermie.fr/annuaire/${slug}`,
     },
   };
 }
@@ -48,7 +48,7 @@ export default async function AnnuaireSlugPage({ params }: { params: Promise<{ s
             Installateurs géothermie à {city.name}
           </h1>
           <p className="text-center text-stone-600 mb-10">
-            Département {city.department_name} ({city.department_code}) — Trouvez les foreurs et installateurs RGE dans votre ville.
+            Département {city.department_name} ({city.department_code}) — Trouvez les foreurs et foreurs QualiForage dans votre ville.
           </p>
 
           <div className="bg-stone-50 border border-stone-200 p-6 rounded-xl mb-10">

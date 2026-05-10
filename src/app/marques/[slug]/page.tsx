@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: `${brand.name} Géothermie — Avis, Prix et Modèles 2026`,
     description: brand.description,
     alternates: {
-      canonical: `https://www.cout-geothermie.fr/marques/${slug}`,
+      canonical: `https://www.prix-forage-geothermie.fr/marques/${slug}`,
     },
   };
 }

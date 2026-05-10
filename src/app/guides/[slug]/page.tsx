@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: `${guide.title} | Cout-Geothermie.fr`,
     description: guide.description,
     alternates: {
-      canonical: `https://www.cout-geothermie.fr/guides/${slug}`,
+      canonical: `https://www.prix-forage-geothermie.fr/guides/${slug}`,
     },
   };
 }

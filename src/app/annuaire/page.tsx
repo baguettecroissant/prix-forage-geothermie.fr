@@ -4,10 +4,10 @@ import citiesData from "@/data/cities.json";
 import { City } from "@/types";
 
 export const metadata = {
-    title: "Annuaire des Installateurs Géothermie par Ville — Trouvez un installateur RGE",
+    title: "Annuaire des Installateurs Géothermie par Ville — Trouvez un foreur QualiForage",
     description: "Trouvez un installateur géothermique RGE dans votre ville. Plus de 35 000 communes couvertes en France. Devis gratuits et comparaison de prix.",
     alternates: {
-        canonical: "https://www.cout-geothermie.fr/annuaire",
+        canonical: "https://www.prix-forage-geothermie.fr/annuaire",
     },
 };
 
