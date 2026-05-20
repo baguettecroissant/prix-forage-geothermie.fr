@@ -21,9 +21,18 @@ import {
 } from "@tabler/icons-react";
 import { Metadata } from "next";
 
-export const dynamic = "force-dynamic";
-
 const allCities = citiesData as City[];
+
+// Pre-build top 500 cities by population at build time.
+// Remaining ~35,000 cities are generated on-demand (ISR) and cached at the CDN edge.
+export function generateStaticParams() {
+  return [...allCities]
+    .sort((a, b) => (b.population || 0) - (a.population || 0))
+    .slice(0, 500)
+    .map((c) => ({ slug: c.slug }));
+}
+
+
 const departmentInfos = deptInfos as Record<
   string,
   { prix_min: number; prix_max: number; budget_moyen: number; specificites: string }

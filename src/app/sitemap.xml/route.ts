@@ -1,7 +1,7 @@
 import citiesData from '@/data/cities.json';
 import { City } from '@/types';
 
-export const dynamic = 'force-dynamic';
+export const dynamic = 'force-static';
 
 const allCities = citiesData as City[];
 

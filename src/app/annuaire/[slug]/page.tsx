@@ -6,9 +6,17 @@ import { City } from "@/types";
 import { IconArrowRight, IconChevronRight } from "@tabler/icons-react";
 import { Metadata } from "next";
 
-export const dynamic = "force-dynamic";
 
 const allCities = citiesData as City[];
+
+// Pre-build top 500 cities at build time. Others generated on-demand (ISR).
+export function generateStaticParams() {
+  return [...allCities]
+    .sort((a, b) => (b.population || 0) - (a.population || 0))
+    .slice(0, 500)
+    .map((c) => ({ slug: c.slug }));
+}
+
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
