@@ -2,6 +2,7 @@
 import { Header } from "../components/layout/Header";
 import { Footer } from "../components/layout/Footer";
 import "../styles/global.css";
+import { IconBackhoe } from "@tabler/icons-react";
 
 interface Props {
   title?: string;
@@ -17,6 +18,8 @@ const {
 
 const BASE_URL = "https://www.prix-forage-geothermie.fr";
 const formattedTitle = title.includes("prix-forage-geothermie.fr") ? title : `${title} | prix-forage-geothermie.fr`;
+
+const showStickyCta = Astro.url.pathname !== "/devis" && !Astro.url.pathname.startsWith("/geothermie/");
 
 const schemaOrg = {
   "@context": "https://schema.org",
@@ -84,9 +87,17 @@ const schemaOrg = {
   </head>
   <body class="font-sans antialiased bg-bg text-text min-h-screen flex flex-col">
     <Header client:load />
-    <main class="flex-1">
+    <main class={`flex-1 ${showStickyCta ? "pb-20 md:pb-0" : ""}`}>
       <slot />
     </main>
+    {showStickyCta && (
+      <div class="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-white/95 backdrop-blur-sm border-t border-stone-200 p-3 shadow-lg flex justify-center items-center">
+        <a href="/devis" class="flex items-center justify-center gap-2 w-full bg-accent hover:bg-blue-700 text-white py-3 rounded-xl font-bold transition-all shadow-md text-center">
+          <IconBackhoe class="h-5 w-5" />
+          Estimation Devis Gratuite
+        </a>
+      </div>
+    )}
     <Footer />
   </body>
 </html>

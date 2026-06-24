@@ -1,12 +1,12 @@
 import { IconBackhoe } from "@tabler/icons-react";
 
 const POPULAR_GUIDES = [
-    { slug: "prix-geothermie-2026", title: "Prix Géothermie 2026" },
-    { slug: "captage-vertical-vs-horizontal", title: "Vertical vs Horizontal" },
-    { slug: "forage-geothermique", title: "Forage Géothermique" },
-    { slug: "maprimerenov-geothermie-2026", title: "MaPrimeRénov' 2026" },
-    { slug: "cop-geothermique", title: "COP Géothermique" },
-    { slug: "entretien-pac-geothermique", title: "Entretien PAC" },
+    { slug: "prix-forage-metre-lineaire", title: "Prix Géothermie 2026" },
+    { slug: "pac-sol-eau-vs-eau-eau", title: "Vertical vs Horizontal" },
+    { slug: "etude-sol-geothermique", title: "Forage Géothermique" },
+    { slug: "reglementation-forage-dreal", title: "MaPrimeRénov' 2026" },
+    { slug: "cop-scop-performance", title: "COP Géothermique" },
+    { slug: "corbeilles-geostructures", title: "Corbeilles Géothermiques" },
 ];
 
 const TOP_CITIES = [
