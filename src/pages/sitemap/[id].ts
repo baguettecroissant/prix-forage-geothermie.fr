@@ -1,10 +1,9 @@
-import citiesData from '@/data/cities.json';
-import { City } from '@/types';
-import { getAllGuides } from '@/data/guides';
-import { getAllBrands } from '@/data/brands';
-import { notFound } from 'next/navigation';
+import citiesData from '../../data/cities.json';
+import type { City } from '../../types';
+import { getAllGuides } from '../../data/guides';
+import { getAllBrands } from '../../data/brands';
 
-export const dynamic = 'force-static';
+export const prerender = true;
 
 const BASE_URL = 'https://www.prix-forage-geothermie.fr';
 const allCities = citiesData as City[];
@@ -17,22 +16,19 @@ function getCitiesByDepartment(code: string): City[] {
     return allCities.filter(c => c.department_code === code);
 }
 
-export async function generateStaticParams() {
+export async function getStaticPaths() {
     const departmentCodes = getAllDepartmentCodes();
     return [
-        { id: 'main.xml' },
-        ...departmentCodes.map(code => ({ id: `${code}.xml` }))
+        { params: { id: 'main.xml' } },
+        ...departmentCodes.map(code => ({ params: { id: `${code}.xml` } }))
     ];
 }
 
-export async function GET(
-    _request: Request,
-    { params }: { params: Promise<{ id: string }> }
-) {
-    const { id } = await params;
+export async function GET({ params }: { params: { id: string } }) {
+    const { id } = params;
 
     if (!id.endsWith('.xml')) {
-        return notFound();
+        return new Response('Not Found', { status: 404 });
     }
 
     const sitemapId = id.replace('.xml', '');
@@ -82,7 +78,7 @@ export async function GET(
         const departmentCities = getCitiesByDepartment(sitemapId);
 
         if (departmentCities.length === 0) {
-            return notFound();
+            return new Response('Not Found', { status: 404 });
         }
 
         const cityLastUpdated = new Date('2026-04-02');

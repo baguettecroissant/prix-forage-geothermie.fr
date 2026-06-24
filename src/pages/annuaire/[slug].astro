@@ -1,0 +1,71 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { ViteUnDevisWidget } from "../../components/affiliation/ViteUnDevisWidget";
+import citiesData from "../../data/cities.json";
+import type { City } from "../../types";
+import { IconArrowRight, IconChevronRight } from "@tabler/icons-react";
+
+export const prerender = false;
+
+const { slug } = Astro.params;
+const allCities = citiesData as City[];
+const city = allCities.find((c) => c.slug === slug);
+
+if (!city) {
+  return Astro.redirect('/404');
+}
+
+// Set CDN caching header (ISR equivalent on Cloudflare Pages)
+Astro.response.headers.set('Cache-Control', 's-maxage=604800, stale-while-revalidate=86400');
+---
+
+<Layout 
+  title={`Installateurs Géothermie à ${city.name} (${city.zip})`}
+  description={`L'annuaire pour trouver le meilleur installateur géothermique à ${city.name} (${city.zip}). Consultez les professionnels RGE et demandez un devis.`}
+  canonical={`https://www.prix-forage-geothermie.fr/annuaire/${slug}`}
+>
+  <div class="bg-bg min-h-screen py-16 px-4">
+    <div class="max-w-4xl mx-auto">
+      <nav class="text-sm text-stone-500 mb-8 flex items-center flex-wrap gap-1">
+        <a href="/" class="hover:text-secondary">Accueil</a>
+        <IconChevronRight class="h-3.5 w-3.5" />
+        <a href="/annuaire" class="hover:text-secondary">Annuaire</a>
+        <IconChevronRight class="h-3.5 w-3.5" />
+        <span class="text-primary font-medium">{city.name} ({city.zip})</span>
+      </nav>
+
+      <div class="bg-white p-8 sm:p-12 rounded-2xl shadow-sm border border-stone-100">
+        <h1 class="text-3xl md:text-4xl font-heading text-center font-bold text-primary mb-4">
+          Installateurs géothermie à {city.name}
+        </h1>
+        <p class="text-center text-stone-600 mb-10">
+          Département {city.department_name} ({city.department_code}) — Trouvez les foreurs et foreurs QualiForage dans votre ville.
+        </p>
+
+        <div class="bg-stone-50 border border-stone-200 p-6 rounded-xl mb-10">
+          <h2 class="font-heading text-xl border-b border-stone-200 pb-2 mb-4">Marques et fabricants à {city.name}</h2>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {["Viessmann", "NIBE", "Vaillant", "Atlantic", "Daikin", "Stiebel Eltron", "Bosch", "De Dietrich"].map((name) => (
+              <div class="text-center p-3 bg-white rounded-lg border border-stone-100 text-sm font-medium text-stone-700 hover:border-secondary transition-colors">
+                {name}
+              </div>
+            ))}
+          </div>
+          <p class="text-xs text-stone-500 mt-4 text-center italic">
+            Disponibilité variable selon votre zone. Utilisez le formulaire ci-dessous pour être mis en relation avec les installateurs actifs à {city.name}.
+          </p>
+        </div>
+
+        <div class="max-w-2xl mx-auto">
+          <ViteUnDevisWidget client:load />
+        </div>
+
+        <div class="mt-10 text-center">
+          <a href={`/geothermie/${city.slug}`} class="inline-flex items-center text-secondary font-medium hover:underline">
+            Voir les prix géothermie à {city.name} <IconArrowRight class="ml-2 h-4 w-4" />
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>

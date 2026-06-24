@@ -1,7 +1,7 @@
-import citiesData from '@/data/cities.json';
-import { City } from '@/types';
+import citiesData from '../data/cities.json';
+import type { City } from '../types';
 
-export const dynamic = 'force-static';
+export const prerender = true;
 
 const allCities = citiesData as City[];
 

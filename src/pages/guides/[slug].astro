@@ -1,0 +1,169 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { ViteUnDevisWidget } from "../../components/affiliation/ViteUnDevisWidget";
+import { getAllGuides } from "../../data/guides";
+import { IconFlame, IconClock, IconBulb } from "@tabler/icons-react";
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const allGuides = getAllGuides();
+  return allGuides.map((guide) => ({
+    params: { slug: guide.slug },
+    props: { guide },
+  }));
+}
+
+const { slug } = Astro.params;
+const { guide } = Astro.props;
+
+const allGuides = getAllGuides();
+const otherGuides = allGuides.filter((g) => g.slug !== slug).slice(0, 4);
+---
+
+<Layout 
+  title={`${guide.title} | Cout-Geothermie.fr`} 
+  description={guide.description}
+  canonical={`https://www.prix-forage-geothermie.fr/guides/${slug}`}
+>
+  <div class="bg-bg min-h-screen py-16 px-4">
+    <div class="max-w-7xl mx-auto">
+      <nav class="text-sm text-stone-500 mb-8 max-w-4xl">
+        <a href="/" class="hover:text-secondary">Accueil</a>
+        <span class="mx-2">›</span>
+        <a href="/guides" class="hover:text-secondary">Guides</a>
+        <span class="mx-2">›</span>
+        <span class="text-primary font-medium">{guide.title}</span>
+      </nav>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
+        <article class="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-stone-100 overflow-hidden">
+          {guide.heroImage && (
+            <div class="w-full aspect-video md:aspect-[21/9] relative bg-stone-100">
+              <img src={guide.heroImage} alt={guide.title} class="object-cover w-full h-full" />
+            </div>
+          )}
+          <div class="p-8 md:p-12 prose prose-lg prose-stone max-w-none">
+            <span class="text-secondary font-bold tracking-wider text-sm mb-2 block uppercase not-prose">Dossier Spécial Géothermie</span>
+            <h1 class="font-heading text-3xl md:text-4xl leading-tight mb-8 pb-4 border-b not-prose">{guide.title}</h1>
+
+            <div class="flex items-center gap-2 text-stone-500 text-sm font-medium mb-8 not-prose bg-stone-50 p-3 rounded-lg inline-flex">
+              <IconClock class="w-4 h-4" />
+              Lecture estimée : <strong>{guide.readTime}</strong>
+            </div>
+
+            <p class="lead text-xl text-stone-600 mb-12 font-light border-l-4 border-secondary pl-6">
+              <strong>En bref : </strong> {guide.description}
+            </p>
+
+            {guide.sections?.map((section) => (
+              <div class="mb-12">
+                <h2 class="text-2xl font-bold font-heading text-primary border-b border-stone-100 pb-3 mb-6">
+                  {section.title}
+                </h2>
+                <div class="text-stone-700 whitespace-pre-wrap">
+                  {section.content.split('\n\n').map((paragraph) => (
+                    <p class="mb-4" set:html={paragraph.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')} />
+                  ))}
+                </div>
+                
+                {section.tip && (
+                  <div class="not-prose flex gap-4 bg-warm/30 border border-secondary/30 rounded-xl p-6 mt-6">
+                    <div class="flex-shrink-0">
+                      <div class="w-10 h-10 rounded-full bg-secondary text-white flex items-center justify-center">
+                        <IconBulb class="w-5 h-5" />
+                      </div>
+                    </div>
+                    <div>
+                      <h4 class="font-bold text-primary mb-1">Le conseil exclusif</h4>
+                      <p class="text-stone-600 text-sm m-0 leading-relaxed">{section.tip}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+
+            {guide.tableData && guide.tableData.length > 0 && (
+              <div class="my-12 not-prose overflow-x-auto rounded-xl border border-stone-200">
+                <table class="w-full text-left border-collapse">
+                  <thead>
+                    <tr class="bg-stone-50 border-b border-stone-200 text-sm uppercase tracking-wider text-stone-500">
+                      <th class="p-4 font-semibold w-1/4">{guide.tableData[0].label}</th>
+                      {guide.tableData[0].values.map((val) => (
+                        <th class="p-4 font-semibold border-l border-stone-200">{val}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody class="text-sm">
+                    {guide.tableData.slice(1).map((row) => (
+                      <tr class="border-b border-stone-100 last:border-0 hover:bg-stone-50/50">
+                        <td class="p-4 font-medium text-stone-900">{row.label}</td>
+                        {row.values.map((val) => (
+                          <td class="p-4 text-stone-600 border-l border-stone-100" set:html={val} />
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {guide.faq && guide.faq.length > 0 && (
+              <div class="mt-16 bg-stone-50 p-8 rounded-2xl border border-stone-200 not-prose">
+                <h3 class="font-heading text-2xl font-bold text-primary mb-8 text-center">Questions fréquentes (FAQ)</h3>
+                <div class="space-y-6">
+                  {guide.faq.map((item) => (
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-100">
+                      <h4 class="font-bold text-lg text-primary mb-3">{item.question}</h4>
+                      <p class="text-stone-600 m-0">{item.answer}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div class="mt-16 pt-8 border-t">
+              <p>
+                N'hésitez pas à consulter nos autres guides pour approfondir un aspect spécifique de votre projet :{" "}
+                <a href="/guides/forage-geothermique" class="text-secondary underline">forage géothermique</a>,{" "}
+                <a href="/guides/captage-vertical-vs-horizontal" class="text-secondary underline">captage vertical vs horizontal</a>, ou encore{" "}
+                <a href="/guides/maprimerenov-geothermie-2026" class="text-secondary underline">les aides MaPrimeRénov'</a>.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <aside class="lg:col-span-1 sticky top-28 space-y-8">
+          <ViteUnDevisWidget client:load />
+
+          <div class="bg-stone-900 p-6 rounded-2xl text-white shadow-xl relative overflow-hidden group">
+            <div class="relative z-10">
+              <h4 class="font-heading font-bold text-xl mb-3 text-secondary">Besoin d'un devis ?</h4>
+              <p class="text-stone-300 text-sm mb-6 leading-relaxed">
+                Découvrez les marques de PAC géothermiques (Viessmann, NIBE, Vaillant, Atlantic). Analyses et prix.
+              </p>
+              <a href="/marques" class="inline-flex items-center text-secondary hover:text-white font-medium text-sm transition-colors group-hover:translate-x-1 duration-300">
+                Consulter les marques <span class="ml-2">→</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="bg-white border border-stone-200 rounded-2xl shadow-sm overflow-hidden">
+            <div class="p-5 border-b border-stone-100 bg-stone-50">
+              <h4 class="font-bold text-primary text-sm font-heading flex items-center gap-2 uppercase tracking-wide">
+                <IconFlame class="h-5 w-5 text-secondary" /> À lire aussi
+              </h4>
+            </div>
+            <div class="divide-y divide-stone-100">
+              {otherGuides.map((g) => (
+                <a href={`/guides/${g.slug}`} class="flex p-4 hover:bg-stone-50 transition-colors group">
+                  <span class="text-sm font-medium text-primary group-hover:text-secondary transition-colors line-clamp-2 leading-relaxed">{g.title}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</Layout>

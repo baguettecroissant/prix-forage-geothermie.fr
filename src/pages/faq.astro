@@ -1,8 +1,7 @@
-export const metadata = {
-  title: "FAQ — Questions sur le Forage Géothermique",
-  description: "Prix au mètre, profondeur, types de sol, réglementation : toutes les réponses sur le forage géothermique.",
-  alternates: { canonical: "https://www.prix-forage-geothermie.fr/faq" },
-};
+---
+import Layout from "../layouts/Layout.astro";
+
+export const prerender = true;
 
 const faqItems = [
   { q: "Combien coûte un forage géothermique au mètre linéaire ?", a: "Le prix varie de 40€/ml en terrain sédimentaire (calcaire, craie) à 120€/ml en roche volcanique (basalte). Budget moyen pour 160 ml (maison 120 m²) : 8 000 à 14 000€." },
@@ -17,24 +16,42 @@ const faqItems = [
   { q: "Les sondes de forage ont-elles une durée de vie limitée ?", a: "Non, les sondes géothermiques en PEHD ont une durée de vie de 50 ans et plus. Seule la PAC est à remplacer tous les 20-25 ans." },
 ];
 
-export default function FAQPage() {
-  return (
-    <div className="bg-bg min-h-screen py-20 px-4">
-      <div className="max-w-3xl mx-auto">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl font-heading font-bold text-primary mb-4">Questions Fréquentes — Forage Géothermique</h1>
-          <p className="text-slate-600 text-lg">Prix au mètre, profondeur, réglementation et types de sol : tout sur le forage.</p>
-        </div>
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", "@type": "FAQPage", mainEntity: faqItems.map(faq => ({ "@type": "Question", name: faq.q, acceptedAnswer: { "@type": "Answer", text: faq.a } })) }) }} />
-        <div className="space-y-4">
-          {faqItems.map((faq, idx) => (
-            <details key={idx} className="group bg-white rounded-lg border border-slate-200 overflow-hidden">
-              <summary className="flex cursor-pointer items-center justify-between p-5 font-semibold text-primary group-hover:bg-slate-50 transition-colors text-lg">{faq.q}<span className="text-slate-400 group-open:rotate-180 transition-transform ml-4 shrink-0">▼</span></summary>
-              <div className="p-5 pt-0 text-slate-600 leading-relaxed">{faq.a}</div>
-            </details>
-          ))}
-        </div>
+const schemaFAQ = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqItems.map((faq) => ({
+    "@type": "Question",
+    name: faq.q,
+    acceptedAnswer: { "@type": "Answer", text: faq.a },
+  })),
+};
+---
+
+<Layout 
+  title="FAQ — Questions sur le Forage Géothermique" 
+  description="Prix au mètre, profondeur, types de sol, réglementation : toutes les réponses sur le forage géothermique."
+  canonical="https://www.prix-forage-geothermie.fr/faq"
+>
+  <div class="bg-bg min-h-screen py-20 px-4">
+    <div class="max-w-3xl mx-auto">
+      <div class="text-center mb-16">
+        <h1 class="text-4xl font-heading font-bold text-primary mb-4">Questions Fréquentes — Forage Géothermique</h1>
+        <p class="text-slate-600 text-lg">Prix au mètre, profondeur, réglementation et types de sol : tout sur le forage.</p>
+      </div>
+
+      <script type="application/ld+json" set:html={JSON.stringify(schemaFAQ)} />
+
+      <div class="space-y-4">
+        {faqItems.map((faq) => (
+          <details class="group bg-white rounded-lg border border-slate-200 overflow-hidden">
+            <summary class="flex cursor-pointer items-center justify-between p-5 font-semibold text-primary group-hover:bg-slate-50 transition-colors text-lg">
+              {faq.q}
+              <span class="text-slate-400 group-open:rotate-180 transition-transform ml-4 shrink-0">▼</span>
+            </summary>
+            <div class="p-5 pt-0 text-slate-600 leading-relaxed">{faq.a}</div>
+          </details>
+        ))}
       </div>
     </div>
-  );
-}
+  </div>
+</Layout>

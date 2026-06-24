@@ -1,0 +1,92 @@
+---
+import { Header } from "../components/layout/Header";
+import { Footer } from "../components/layout/Footer";
+import "../app/globals.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  canonical?: string;
+}
+
+const {
+  title = "Prix Forage Géothermie — Tarifs, Devis et Coûts 2026",
+  description = "Estimez le prix d'un forage géothermique en 2026 : captage vertical, horizontal, tarifs par département. Comparez les devis et économisez jusqu'à 15 000€ d'aides.",
+  canonical = "https://www.prix-forage-geothermie.fr",
+} = Astro.props;
+
+const BASE_URL = "https://www.prix-forage-geothermie.fr";
+const formattedTitle = title.includes("prix-forage-geothermie.fr") ? title : `${title} | prix-forage-geothermie.fr`;
+
+const schemaOrg = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${BASE_URL}/#organization`,
+      name: "Prix Forage Géothermie",
+      url: BASE_URL,
+      description: "Comparateur expert des prix de forage géothermique en France.",
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${BASE_URL}/#website`,
+      url: BASE_URL,
+      name: "Prix Forage Géothermie",
+      publisher: { "@id": `${BASE_URL}/#organization` },
+      inLanguage: "fr-FR",
+    },
+  ],
+};
+---
+
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{formattedTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:site_name" content="Prix Forage Géothermie" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonical} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&family=Karla:ital,wght@0,400..700;1,400..700&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+
+    <!-- Font variables injection -->
+    <style>
+      :root {
+        --font-sora: "Sora", sans-serif;
+        --font-karla: "Karla", sans-serif;
+        --font-fira-code: "Fira Code", monospace;
+      }
+    </style>
+
+    <script type="application/ld+json" set:html={JSON.stringify(schemaOrg)} />
+  </head>
+  <body class="font-sans antialiased bg-bg text-text min-h-screen flex flex-col">
+    <Header client:load />
+    <main class="flex-1">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

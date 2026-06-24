@@ -1,0 +1,478 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { ViteUnDevisWidget } from "../../components/affiliation/ViteUnDevisWidget";
+import citiesData from "../../data/cities.json";
+import deptInfos from "../../data/departments-infos.json";
+import type { City } from "../../types";
+import { generateCityContent, findNearbyCities } from "../../lib/content/content-engine";
+import { getAllGuides } from "../../data/guides";
+import {
+  IconArrowRight,
+  IconChevronRight,
+  IconFlame,
+  IconMapPin,
+  IconTemperature,
+  IconLeaf,
+  IconShieldCheck,
+  IconClock,
+  IconHome,
+  IconTrendingUp,
+  IconDroplet,
+} from "@tabler/icons-react";
+
+export const prerender = false;
+
+const { slug } = Astro.params;
+const allCities = citiesData as City[];
+const city = allCities.find((c) => c.slug === slug);
+
+if (!city) {
+  return Astro.redirect('/404');
+}
+
+// Set CDN caching header (ISR equivalent on Cloudflare Pages)
+Astro.response.headers.set('Cache-Control', 's-maxage=604800, stale-while-revalidate=86400');
+
+const departmentInfos = deptInfos as Record<
+  string,
+  { prix_min: number; prix_max: number; budget_moyen: number; specificites: string }
+>;
+
+const deptInfo = departmentInfos[city.department_code];
+const content = generateCityContent(city);
+const nearbyCities = findNearbyCities(allCities, city, 8);
+const guides = getAllGuides().slice(0, 4);
+const prixMin = deptInfo?.prix_min || 14000;
+const prixMax = deptInfo?.prix_max || 30000;
+const budgetMoyen = deptInfo?.budget_moyen || 22000;
+
+const mapSrc = `https://www.openstreetmap.org/export/embed.html?bbox=${city.coordinates.lng - 0.05}%2C${city.coordinates.lat - 0.03}%2C${city.coordinates.lng + 0.05}%2C${city.coordinates.lat + 0.03}&layer=mapnik&marker=${city.coordinates.lat}%2C${city.coordinates.lng}`;
+
+// Schema.org
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Accueil", item: "https://www.prix-forage-geothermie.fr" },
+        { "@type": "ListItem", position: 2, name: "Annuaire", item: "https://www.prix-forage-geothermie.fr/annuaire" },
+        { "@type": "ListItem", position: 3, name: `Géothermie ${city.name}`, item: `https://www.prix-forage-geothermie.fr/geothermie/${slug}` },
+      ],
+    },
+    {
+      "@type": "Service",
+      name: `Installation géothermique à ${city.name}`,
+      serviceType: "Installation PAC géothermique",
+      areaServed: { "@type": "City", name: city.name, postalCode: city.zip },
+      provider: { "@id": "https://www.prix-forage-geothermie.fr/#organization" },
+      offers: {
+        "@type": "AggregateOffer",
+        lowPrice: prixMin,
+        highPrice: prixMax,
+        priceCurrency: "EUR",
+        offerCount: 3,
+      },
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: content.faqItems.map((faq) => ({
+        "@type": "Question",
+        name: faq.question,
+        acceptedAnswer: { "@type": "Answer", text: faq.answer },
+      })),
+    },
+  ],
+};
+---
+
+<Layout
+  title={`Prix Forage Géothermique à ${city.name} (${city.zip}) — De ${Math.round(prixMin*0.35).toLocaleString("fr-FR")}€ à ${Math.round(prixMax*0.4).toLocaleString("fr-FR")}€ le forage`}
+  description={`Quel est le prix du forage géothermique à ${city.name} (${city.zip}) ? De 40 à 120€ le mètre linéaire. Comparez les foreurs certifiés QualiForage dans le ${city.department_name}.`}
+  canonical={`https://www.prix-forage-geothermie.fr/geothermie/${slug}`}
+>
+  <div class="min-h-screen bg-bg">
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+
+    {/* 1. Breadcrumb */}
+    <div class="bg-stone-50 pt-4 pb-2">
+      <div class="max-w-5xl mx-auto px-4">
+        <nav class="text-sm text-stone-500 flex items-center flex-wrap gap-1">
+          <a href="/" class="hover:text-secondary">Accueil</a>
+          <IconChevronRight class="h-3.5 w-3.5" />
+          <a href="/annuaire" class="hover:text-secondary">Annuaire</a>
+          <IconChevronRight class="h-3.5 w-3.5" />
+          <span class="text-primary font-medium">{city.name} ({city.zip})</span>
+        </nav>
+      </div>
+    </div>
+
+    {/* 2. Hero */}
+    <section class="bg-gradient-to-br from-stone-900 via-stone-800 to-stone-900 text-white py-16">
+      <div class="max-w-5xl mx-auto px-4 text-center">
+        <h1 class="text-3xl md:text-5xl font-extrabold mb-4 font-heading leading-tight">
+          Prix Forage Géothermique à{" "}
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-accent to-amber-400">{city.name}</span>
+        </h1>
+        <p class="text-xl text-stone-300">
+          Tarifs au mètre, profondeur et foreurs certifiés — {city.department_name} ({city.department_code})
+        </p>
+        <div class="mt-8">
+          <a href="#devis" class="inline-flex items-center bg-accent hover:bg-orange-700 text-white px-8 py-3 rounded-xl font-bold shadow-lg transition-all hover:scale-105">
+            <IconFlame class="mr-2 h-5 w-5" />
+            Devis forage à {city.name}
+            <IconArrowRight class="ml-2 h-5 w-5" />
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <div class="max-w-5xl mx-auto px-4 py-12">
+      {/* 3. Intro + Map */}
+      <section class="mb-12 grid grid-cols-1 lg:grid-cols-5 gap-8">
+        <div class="lg:col-span-3">
+          <h2 class="text-3xl font-bold text-primary mb-4 font-heading">
+            {content.introTitle} ({city.zip})
+          </h2>
+          <div class="prose prose-lg text-stone-600">
+            {content.introParagraph.split('\n\n').map((paragraph) => (
+              <p>{paragraph}</p>
+            ))}
+          </div>
+          {/* 4. Data Cards */}
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6">
+            <div class="bg-white p-3 rounded-lg border border-stone-100 text-center">
+              <div class="text-xs text-stone-500 mb-1">Département</div>
+              <div class="font-bold text-primary text-sm">{city.department_name} ({city.department_code})</div>
+            </div>
+            <div class="bg-white p-3 rounded-lg border border-stone-100 text-center">
+              <div class="text-xs text-stone-500 mb-1">Région</div>
+              <div class="font-bold text-primary text-sm">{city.region}</div>
+            </div>
+            <div class="bg-white p-3 rounded-lg border border-stone-100 text-center">
+              <div class="text-xs text-stone-500 mb-1">Population</div>
+              <div class="font-bold text-primary text-sm">
+                {content.displayPopulation > 0 ? content.displayPopulation.toLocaleString("fr-FR") : "—"}
+              </div>
+            </div>
+            <div class="bg-white p-3 rounded-lg border border-stone-100 text-center">
+              <div class="text-xs text-stone-500 mb-1">Budget moyen</div>
+              <div class="font-bold text-secondary text-sm font-mono">{budgetMoyen.toLocaleString("fr-FR")}€</div>
+            </div>
+          </div>
+        </div>
+        <div class="lg:col-span-2">
+          <div class="rounded-xl overflow-hidden border border-stone-200 shadow-sm">
+            <iframe
+              src={mapSrc}
+              width="100%"
+              height="280"
+              class="w-full"
+              style="border: 0;"
+              loading="lazy"
+              title={`Localisation de ${city.name}`}
+            />
+            <div class="bg-white p-3 text-center">
+              <a
+                href={`https://www.openstreetmap.org/?mlat=${city.coordinates.lat}&mlon=${city.coordinates.lng}#map=14/${city.coordinates.lat}/${city.coordinates.lng}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-xs text-secondary hover:underline font-medium inline-flex items-center gap-1"
+              >
+                <IconMapPin class="h-3.5 w-3.5" />
+                Voir {city.name} sur la carte
+              </a>
+            </div>
+          </div>
+          <div class="mt-4">
+            <a
+              href={`https://www.annuaire-mairie.fr/mairie-${city.name.toLowerCase().replace(/\s+/g, "-").replace(/'/g, "-")}.html`}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex items-center gap-2 bg-white p-3 rounded-lg border border-stone-100 text-sm hover:border-secondary transition-colors"
+            >
+              <IconHome class="h-4 w-4 text-secondary" />
+              <span class="text-stone-600">Mairie de {city.name}</span>
+              <span class="text-xs text-stone-400 ml-auto">Site officiel →</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* 5. Grille Tarifaire */}
+      <section class="mb-12 bg-warm/50 p-6 md:p-8 rounded-2xl border border-amber-200">
+        <h2 class="text-2xl font-bold text-primary mb-4 font-heading">
+          Prix géothermie à {city.name} — Tarifs 2026
+        </h2>
+        <p class="text-stone-600 mb-6">{content.pricingContext}</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          {[
+            {
+              type: "Captage Horizontal",
+              desc: "Collecteurs enterrés à 1,2 m — terrain min. 150 m²",
+              prix: `${Math.round(prixMin * 0.9).toLocaleString("fr-FR")} – ${Math.round(prixMin * 1.4).toLocaleString("fr-FR")}€`,
+              cop: "COP 3,5 – 4,5",
+              badge: "bg-green-100 text-green-700",
+            },
+            {
+              type: "Captage Vertical",
+              desc: "Sondes à 80-200 m — compact, tous terrains",
+              prix: `${Math.round(budgetMoyen * 0.8).toLocaleString("fr-FR")} – ${Math.round(budgetMoyen * 1.4).toLocaleString("fr-FR")}€`,
+              cop: "COP 4,0 – 5,0",
+              badge: "bg-amber-100 text-amber-700",
+            },
+            {
+              type: "Aquathermie (nappe)",
+              desc: "PAC eau-eau sur nappe phréatique — meilleur rendement",
+              prix: `${Math.round(budgetMoyen * 0.7).toLocaleString("fr-FR")} – ${Math.round(budgetMoyen * 1.3).toLocaleString("fr-FR")}€`,
+              cop: "COP 4,5 – 5,5",
+              badge: "bg-blue-100 text-blue-700",
+            },
+          ].map((item) => (
+            <div class="bg-white p-5 border border-stone-200 rounded-xl text-center">
+              <span class={`inline-block text-xs font-bold px-3 py-1 rounded-full mb-3 ${item.badge}`}>
+                {item.cop}
+              </span>
+              <h3 class="font-heading font-bold text-primary mb-1">{item.type}</h3>
+              <p class="text-xs text-stone-500 mb-2">{item.desc}</p>
+              <p class="font-mono text-lg font-bold text-secondary">{item.prix}</p>
+            </div>
+          ))}
+        </div>
+        {deptInfo && (
+          <div class="bg-white border border-secondary/20 p-4 rounded-xl text-sm text-stone-700">
+            <strong class="text-secondary">Spécificités {city.department_name} :</strong> {deptInfo.specificites}
+          </div>
+        )}
+        <p class="text-xs text-stone-500 mt-4 text-center">
+          * Prix indicatifs TTC pour {city.name}. Tarif final sur devis selon l'installateur et le type de sol.
+          <a href="/guides/prix-geothermie-2026" class="text-secondary hover:underline font-medium ml-2">→ Guide complet des prix</a>
+        </p>
+      </section>
+
+      {/* 6. Types de sol & captage */}
+      <section class="mb-12 bg-gradient-to-br from-green-50 to-emerald-50 p-6 md:p-8 rounded-2xl border border-green-200">
+        <h2 class="text-2xl font-bold text-primary mb-4 font-heading flex items-center gap-2">
+          <IconLeaf class="h-6 w-6 text-green-600" />
+          Sol et conditions géologiques à {city.name}
+        </h2>
+        <div class="prose prose-stone max-w-none">
+          <p>{content.solType}</p>
+          <p class="font-medium text-green-800">{content.captageRecommande}</p>
+        </div>
+      </section>
+
+      {/* 7. Conseil climatique */}
+      <section class="mb-12 bg-white p-6 md:p-8 rounded-2xl border border-stone-200 shadow-sm">
+        <h2 class="text-2xl font-bold text-primary mb-4 font-heading flex items-center gap-2">
+          <IconTemperature class="h-6 w-6 text-secondary" />
+          Climat et performance géothermique
+        </h2>
+        <div class="prose prose-stone max-w-none mb-6">
+          <p>{content.climateAdvice}</p>
+        </div>
+        <div class="grid md:grid-cols-2 gap-4">
+          <div class="bg-amber-50 border border-amber-100 p-5 rounded-xl">
+            <h3 class="text-sm font-bold text-secondary uppercase tracking-wider mb-2">🗓️ Meilleure saison</h3>
+            <p class="text-stone-700 text-sm leading-relaxed">{content.saisonTravaux}</p>
+          </div>
+          <div class="bg-stone-50 border border-stone-200 p-5 rounded-xl">
+            <h3 class="text-sm font-bold text-primary uppercase tracking-wider mb-2">☁️ Conseil saisonnier</h3>
+            <p class="text-stone-600 text-sm leading-relaxed">{content.conseilSaisonnier}</p>
+          </div>
+        </div>
+      </section>
+
+      {/* 8. Cas d'usage + Logistique */}
+      <section class="mb-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white p-6 rounded-2xl border border-stone-200">
+          <h3 class="text-lg font-bold text-primary mb-3 font-heading">📋 Projets courants à {city.name}</h3>
+          <p class="text-stone-600 text-sm">{content.casUsage}</p>
+        </div>
+        <div class="bg-white p-6 rounded-2xl border border-stone-200">
+          <h3 class="text-lg font-bold text-primary mb-3 font-heading">🚚 Logistique du chantier</h3>
+          <p class="text-stone-600 text-sm">{content.logistique}</p>
+        </div>
+        <div class="bg-white p-6 rounded-2xl border border-stone-200">
+          <h3 class="text-lg font-bold text-primary mb-3 font-heading">💡 Conseil pratique</h3>
+          <p class="text-stone-600 text-sm">{content.conseilPratique}</p>
+        </div>
+        <div class="bg-white p-6 rounded-2xl border border-stone-200">
+          <h3 class="text-lg font-bold text-primary mb-3 font-heading flex items-center gap-2">
+            <IconDroplet class="h-5 w-5 text-secondary" /> Budget et contexte local
+          </h3>
+          <p class="text-stone-600 text-sm">À {city.name}, {content.budgetContexte}</p>
+        </div>
+      </section>
+
+      {/* 9. Checklist */}
+      <section class="mb-12">
+        <h2 class="text-2xl font-bold text-primary mb-6 font-heading">
+          8 étapes de votre projet géothermique à {city.name}
+        </h2>
+        <div class="space-y-3">
+          {content.checklistItems.map((item, idx) => (
+            <div class="flex items-start gap-3 p-4 bg-white border border-stone-100 rounded-lg">
+              <span class="bg-secondary text-white text-xs font-bold px-2 py-1 rounded-full shrink-0">
+                {idx + 1}
+              </span>
+              <span class="text-stone-700">{item}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 10. Widget ViteUnDevis */}
+      <section class="mb-12" id="devis">
+        <div class="bg-stone-50 p-6 md:p-8 rounded-2xl border border-stone-100">
+          <div class="max-w-2xl mx-auto text-center mb-8">
+            <h2 class="text-2xl md:text-3xl font-bold text-primary mb-4 font-heading">
+              Comparez les foreurs géothermiques à {city.name}
+            </h2>
+            <p class="text-stone-600 font-medium">
+              Obtenez jusqu'à 3 devis gratuits d'installateurs RGE à {city.name} ({city.zip}).
+              <br />
+              <span class="text-sm text-stone-500 font-normal">Réponse sous 48h • Sans engagement • Étude de sol offerte</span>
+            </p>
+          </div>
+          <ViteUnDevisWidget client:load />
+        </div>
+      </section>
+
+      {/* 11. Contexte régional */}
+      {content.regionSpecificite && (
+        <section class="mb-12 bg-white p-6 md:p-8 rounded-2xl border border-stone-200 shadow-sm">
+          <h2 class="text-2xl font-bold text-primary mb-4 font-heading flex items-center gap-2">
+            <IconTrendingUp class="h-6 w-6 text-secondary" />
+            La géothermie en {city.region}
+          </h2>
+          <div class="prose prose-stone max-w-none">
+            <p>{content.regionSpecificite}</p>
+            <p>{content.regionTendance}</p>
+            <p class="text-sm text-stone-500">{content.regionMarche}</p>
+          </div>
+        </section>
+      )}
+
+      {/* 12. Maillage marques + annuaire */}
+      <section class="mb-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm">
+          <h3 class="text-lg font-bold text-primary mb-4 font-heading">Marques PAC géothermiques</h3>
+          <div class="grid grid-cols-2 gap-2">
+            {content.marquesRecommandees.map((mSlug) => (
+              <a
+                href={`/marques/${mSlug}`}
+                class="text-sm bg-stone-50 hover:bg-warm text-stone-700 hover:text-secondary px-3 py-2 rounded-lg border border-stone-100 hover:border-secondary transition-colors text-center capitalize font-medium"
+              >
+                {mSlug.replace("-", " ")}
+              </a>
+            ))}
+          </div>
+          <a href="/marques" class="text-xs text-secondary hover:underline font-medium mt-4 block text-center">
+            Comparer toutes les marques →
+          </a>
+        </div>
+        <div class="bg-stone-900 p-6 rounded-2xl text-white relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-secondary/20 rounded-full blur-3xl -mr-16 -mt-16"></div>
+          <h3 class="text-lg font-bold mb-3 font-heading text-secondary">Annuaire installateurs</h3>
+          <p class="text-stone-300 text-sm mb-4 leading-relaxed">
+            Consultez la liste des installateurs géothermiques à {city.name} ({city.zip}) et dans tout le département {city.department_name} ({city.department_code}).
+          </p>
+          <div class="flex flex-col gap-2">
+            <a
+              href={`/annuaire/${city.slug}`}
+              class="text-sm font-medium text-white bg-secondary/20 hover:bg-secondary/30 px-4 py-2 rounded-lg text-center transition-colors border border-secondary/30"
+            >
+              Annuaire {city.name} →
+            </a>
+            <a href="/annuaire" class="text-xs text-stone-400 hover:text-white text-center transition-colors">
+              Voir toutes les villes
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* 13. Guides */}
+      <section class="mb-12 bg-white border border-stone-200 rounded-2xl shadow-sm overflow-hidden">
+        <div class="p-6 border-b border-stone-100 bg-stone-50">
+          <h3 class="font-bold text-primary flex items-center gap-2 font-heading">
+            <IconShieldCheck class="h-5 w-5 text-secondary" /> Guides pour votre projet
+          </h3>
+        </div>
+        <div class="divide-y divide-stone-100">
+          {guides.map((g) => (
+            <a href={`/guides/${g.slug}`} class="flex gap-4 p-4 hover:bg-stone-50 transition-colors group">
+              <div class="flex-1">
+                <h4 class="text-sm font-bold text-primary group-hover:text-secondary transition-colors line-clamp-2 mb-1">
+                  {g.title}
+                </h4>
+                <p class="text-xs text-stone-500 line-clamp-1">{g.description}</p>
+              </div>
+            </a>
+          ))}
+        </div>
+        <div class="p-4 bg-stone-50 text-center">
+          <a href="/guides" class="text-sm font-medium text-secondary hover:underline">
+            Voir tous les guides →
+          </a>
+        </div>
+      </section>
+
+      {/* 14. FAQ */}
+      <section class="mb-12">
+        <h2 class="text-3xl font-bold text-primary mb-8 font-heading">Questions fréquentes — Géothermie à {city.name}</h2>
+        <div class="space-y-4">
+          {content.faqItems.map((faq) => (
+            <div class="bg-white border border-stone-100 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
+              <h3 class="text-lg font-semibold text-stone-800 mb-2">{faq.question}</h3>
+              <p class="text-stone-600 text-sm">{faq.answer}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 15. Nearby Cities */}
+      {nearbyCities.length > 0 && (
+        <section class="mb-12">
+          <h2 class="text-2xl font-bold text-primary mb-6 font-heading">
+            <IconMapPin class="inline h-5 w-5 text-secondary mr-2" />
+            Géothermie près de {city.name}
+          </h2>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {nearbyCities.map((nearby) => (
+              <a
+                href={`/geothermie/${nearby.slug}`}
+                class="flex flex-col bg-white p-4 rounded-lg border border-stone-100 hover:border-secondary hover:shadow-md transition-all group"
+              >
+                <span class="font-bold text-primary group-hover:text-secondary transition-colors text-sm">{nearby.name}</span>
+                <span class="text-xs text-stone-400 font-mono">{nearby.zip}</span>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* 16. CTA Final */}
+      <section class="bg-gradient-to-br from-stone-900 via-stone-800 to-stone-900 text-white p-8 md:p-12 rounded-2xl text-center">
+        <h2 class="text-2xl md:text-3xl font-bold mb-4 font-heading">
+          Estimez le coût de votre forage à {city.name}
+        </h2>
+        <p class="text-stone-300 mb-6 max-w-xl mx-auto">
+          Comparez les foreurs certifiés et obtenez un prix au mètre garanti à {city.name} ({city.zip}).
+        </p>
+        <a href="#devis" class="inline-flex items-center bg-accent hover:bg-orange-700 text-white px-8 py-3 rounded-xl font-bold shadow-lg transition-all hover:scale-105">
+          Devis Forage Gratuit
+          <IconArrowRight class="ml-2 h-5 w-5" />
+        </a>
+      </section>
+    </div>
+
+    {/* Sticky Mobile CTA */}
+    <div class="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-white border-t border-stone-200 p-3 shadow-lg">
+      <a href="#devis" class="flex items-center justify-center gap-2 w-full bg-accent hover:bg-orange-700 text-white py-3 rounded-lg font-bold transition-colors">
+        <IconFlame class="h-5 w-5" />
+        Devis Forage à {city.name}
+      </a>
+    </div>
+  </div>
+</Layout>

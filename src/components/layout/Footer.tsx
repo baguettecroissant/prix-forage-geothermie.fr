@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { IconBackhoe } from "@tabler/icons-react";
 
 const POPULAR_GUIDES = [
@@ -49,25 +48,25 @@ export function Footer() {
                         <p className="text-slate-300 text-sm leading-relaxed max-w-sm">
                             Comparateur expert des prix de forage géothermique en France. Tarifs, devis, aides financières et foreurs RGE qualifiés dans plus de 35 000 communes.
                         </p>
-                        <Link
+                        <a
                             href="/devis"
                             className="inline-block mt-6 bg-accent hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-sm transition-colors"
                         >
                             Devis gratuit →
-                        </Link>
+                        </a>
                     </div>
 
                     {/* Navigation */}
                     <div>
                         <h4 className="text-base font-semibold text-white mb-4 font-heading">Navigation</h4>
                         <ul className="space-y-2">
-                            <li><Link href="/" className="text-slate-300 hover:text-accent transition-colors text-sm">Accueil</Link></li>
-                            <li><Link href="/guides" className="text-slate-300 hover:text-accent transition-colors text-sm">Guides &amp; Conseils</Link></li>
-                            <li><Link href="/marques" className="text-slate-300 hover:text-accent transition-colors text-sm">Marques PAC</Link></li>
-                            <li><Link href="/annuaire" className="text-slate-300 hover:text-accent transition-colors text-sm">Annuaire Foreurs</Link></li>
-                            <li><Link href="/faq" className="text-slate-300 hover:text-accent transition-colors text-sm">FAQ</Link></li>
-                            <li><Link href="/devis" className="text-slate-300 hover:text-accent transition-colors text-sm">Devis Gratuit</Link></li>
-                            <li><Link href="/mentions-legales" className="text-slate-300 hover:text-accent transition-colors text-sm">Mentions Légales</Link></li>
+                            <li><a href="/" className="text-slate-300 hover:text-accent transition-colors text-sm">Accueil</a></li>
+                            <li><a href="/guides" className="text-slate-300 hover:text-accent transition-colors text-sm">Guides &amp; Conseils</a></li>
+                            <li><a href="/marques" className="text-slate-300 hover:text-accent transition-colors text-sm">Marques PAC</a></li>
+                            <li><a href="/annuaire" className="text-slate-300 hover:text-accent transition-colors text-sm">Annuaire Foreurs</a></li>
+                            <li><a href="/faq" className="text-slate-300 hover:text-accent transition-colors text-sm">FAQ</a></li>
+                            <li><a href="/devis" className="text-slate-300 hover:text-accent transition-colors text-sm">Devis Gratuit</a></li>
+                            <li><a href="/mentions-legales" className="text-slate-300 hover:text-accent transition-colors text-sm">Mentions Légales</a></li>
                         </ul>
                     </div>
 
@@ -77,9 +76,9 @@ export function Footer() {
                         <ul className="space-y-2">
                             {POPULAR_GUIDES.map(guide => (
                                 <li key={guide.slug}>
-                                    <Link href={`/guides/${guide.slug}`} className="text-slate-300 hover:text-accent transition-colors text-sm">
+                                    <a href={`/guides/${guide.slug}`} className="text-slate-300 hover:text-accent transition-colors text-sm">
                                         {guide.title}
-                                    </Link>
+                                    </a>
                                 </li>
                             ))}
                         </ul>
@@ -91,9 +90,9 @@ export function Footer() {
                         <ul className="space-y-2">
                             {PAC_BRANDS.map(brand => (
                                 <li key={brand.slug}>
-                                    <Link href={`/marques/${brand.slug}`} className="text-slate-300 hover:text-accent transition-colors text-sm">
+                                    <a href={`/marques/${brand.slug}`} className="text-slate-300 hover:text-accent transition-colors text-sm">
                                         {brand.name}
-                                    </Link>
+                                    </a>
                                 </li>
                             ))}
                         </ul>
@@ -105,20 +104,20 @@ export function Footer() {
                     <h4 className="text-base font-semibold text-white mb-4 font-heading">Prix forage par ville</h4>
                     <div className="flex flex-wrap gap-2">
                         {TOP_CITIES.map(city => (
-                            <Link
+                            <a
                                 key={city.slug}
                                 href={`/geothermie/${city.slug}`}
                                 className="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-accent px-3 py-1.5 rounded-md border border-slate-700 hover:border-accent/50 transition-colors"
                             >
                                 {city.name}
-                            </Link>
+                            </a>
                         ))}
-                        <Link
+                        <a
                             href="/annuaire"
                             className="text-xs bg-secondary/20 hover:bg-secondary/30 text-secondary px-3 py-1.5 rounded-md border border-secondary/30 transition-colors font-medium"
                         >
                             Toutes les villes →
-                        </Link>
+                        </a>
                     </div>
                 </div>
 
@@ -130,3 +129,4 @@ export function Footer() {
         </footer>
     );
 }
+
